@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão de Eventos</title>
+</head>
+<body>
+
+    <h1>Sistema de Gestão de Eventos</h1>
+
+    <!-- Formulário para criar ou editar eventos -->
+    <div>
+        <label for="nome">Nome do Evento</label>
+        <input type="text" id="nome" placeholder="Digite o nome do evento">
+    </div>
+
+    <div>
+        <label for="local">Local</label>
+        <input type="text" id="local" placeholder="Digite o local do evento">
+    </div>
+
+    <div>
+        <label for="data">Data do Evento (dd/mm/aaaa)</label>
+        <input type="text" id="data" placeholder="Digite a data do evento">
+    </div>
+
+    <div>
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" placeholder="Digite a descrição do evento"></textarea>
+    </div>
+
+    <button onclick="criarEvento()">Criar Evento</button>
+
+    <!-- Lista de eventos -->
+    <div id="eventList">
+        <h2>Eventos Cadastrados</h2>
+        <p>Nenhum evento cadastrado.</p>
+    </div>
+
+    <script>
+        // Array para armazenar os eventos
+        let eventos = [];
+
+        // Função para criar ou editar um evento
+        function criarEvento() {
+            const nome = document.getElementById('nome').value;
+            const local = document.getElementById('local').value;
+            const data = document.getElementById('data').value;
+            const descricao = document.getElementById('descricao').value;
+
+            if (!nome || !local || !data || !descricao) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+
+            const evento = {
+                nome: nome,
+                local: local,
+                data: data,
+                descricao: descricao
+            };
+
+            // Adicionar evento à lista
+            eventos.push(evento);
+
+            // Limpar os campos do formulário
+            document.getElementById('nome').value = '';
+            document.getElementById('local').value = '';
+            document.getElementById('data').value = '';
+            document.getElementById('descricao').value = '';
+
+            // Atualizar a lista de eventos
+            exibirEventos();
+        }
+
+        // Função para exibir a lista de eventos
+        function exibirEventos() {
+            const eventListDiv = document.getElementById('eventList');
+            eventListDiv.innerHTML = "<h2>Eventos Cadastrados</h2>";
+
+            if (eventos.length === 0) {
+                eventListDiv.innerHTML += "<p>Nenhum evento cadastrado.</p>";
+            } else {
+                eventos.forEach((evento, index) => {
+                    const eventItem = document.createElement('div');
+                    eventItem.innerHTML = `
+                        <strong>${evento.nome}</strong><br>
+                        Local: ${evento.local}<br>
+                        Data: ${evento.data}<br>
+                        Descrição: ${evento.descricao}<br>
+                        <button onclick="editarEvento(${index})">Editar</button>
+                        <button onclick="excluirEvento(${index})">Excluir</button>
+                    `;
+                    eventListDiv.appendChild(eventItem);
+                });
+            }
+        }
+
+        // Função para editar um evento
+        function editarEvento(index) {
+            const evento = eventos[index];
+            document.getElementById('nome').value = evento.nome;
+            document.getElementById('local').value = evento.local;
+            document.getElementById('data').value = evento.data;
+            document.getElementById('descricao').value = evento.descricao;
+
+            // Remover o evento da lista para edição
+            eventos.splice(index, 1);
+            exibirEventos();
+        }
+
+        // Função para excluir um evento
+        function excluirEvento(index) {
+            eventos.splice(index, 1);
+            exibirEventos();
+        }
+    </script>
+
+</body>
+</html>
